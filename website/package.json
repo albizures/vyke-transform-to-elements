@@ -1,0 +1,26 @@
+{
+	"name": "@vyke/transfrom-to-elements-website",
+	"type": "module",
+	"version": "0.0.1",
+	"description": "",
+	"author": "Jose Albizures <jose@albizures.com> (https://albizures.com/)",
+	"license": "MIT",
+	"keywords": [],
+	"files": [
+		"dist"
+	],
+	"scripts": {
+		"dev": "vite",
+		"build": "tsc && vite build",
+		"preview": "vite preview"
+	},
+	"dependencies": {},
+	"devDependencies": {
+		"autoprefixer": "^10.4.16",
+		"daisyui": "^4.4.23",
+		"postcss": "^8.4.32",
+		"tailwindcss": "^3.4.0",
+		"typescript": "^5.3.2",
+		"vite": "^5.0.10"
+	}
+}

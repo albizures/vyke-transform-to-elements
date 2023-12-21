@@ -1,0 +1,8 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+textarea,
+pre {
+	tab-size: 4;
+}
