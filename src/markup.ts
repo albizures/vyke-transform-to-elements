@@ -9,14 +9,14 @@ export function transform(html: string) {
 
 const quoteIfNeeded = (key: string) => /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(key) ? key : `"${key}"`
 
-type Tag = {
+export type Tag = {
 	children: Array<Node>
 	name: string
 	attribs: Record<string, string>
 	type: 'tag' | 'script'
 }
-type Text = { data: string, type: 'text' }
-type Node = Tag | Text
+export type Text = { data: string, type: 'text' }
+export type Node = Tag | Text
 
 function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
 	const nodes: Array<Node> = []
