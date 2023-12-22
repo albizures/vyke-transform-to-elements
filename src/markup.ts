@@ -44,14 +44,14 @@ function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
 	return nodes
 }
 
+export function markupToNodes(html: string) {
+	return filterDoms((parse(html, { lowerCaseTags: false, lowerCaseAttributeNames: false })))
+}
+
 export type MarkupToElementsOptions = {
 	indent?: number
 	spacing?: boolean
 	htmlTagPred?: (name: string) => boolean
-}
-
-export function markupToNodes(html: string) {
-	return filterDoms((parse(html, { lowerCaseTags: false, lowerCaseAttributeNames: false })))
 }
 
 export function markupToElements(html: string, options?: MarkupToElementsOptions) {
@@ -63,17 +63,15 @@ export function markupToElements(html: string, options?: MarkupToElementsOptions
 	const nodes = markupToNodes(html)
 
 	const tagsUsed = new Set<string>()
-	const code = nodesToElements({
-		nodes,
+	const result = nodesToElements(nodes, {
 		prefix: '',
-		tagsUsed,
 		indent,
 		spacing,
 	})
 
 	return {
-		code,
-		tags: [...tagsUsed].sort(),
+		code: result.code,
+		tags: [...tagsUsed, ...result.tags].sort(),
 	}
 }
 
@@ -86,17 +84,17 @@ function attrsToProps(attrs: Record<string, string>, hasChildren: boolean, spaci
 			.join(', ')}${space}}${hasChildren ? ',' : ''}`
 }
 
-type DomsToCodeArgs = {
-	nodes: ReadonlyArray<Node>
+type NodesToElementOptions = {
 	prefix: string
-	tagsUsed: Set<string>
 	spacing: boolean
 	indent: number
 }
 
-export function nodesToElements(args: DomsToCodeArgs) {
-	const { nodes, prefix, tagsUsed, spacing, indent } = args
-	return nodes.flatMap((node): string | Array<string> => {
+export function nodesToElements(nodes: Array<Node>, options: NodesToElementOptions) {
+	const { prefix, spacing, indent } = options
+	const tagsUsed = new Set<string>()
+
+	const code = nodes.flatMap((node): string | Array<string> => {
 		const suffix = !prefix && nodes.length <= 1 ? '' : ','
 		if (node.type === 'text') {
 			return `${prefix}${JSON.stringify(node.data)}${suffix}`
@@ -108,19 +106,28 @@ export function nodesToElements(args: DomsToCodeArgs) {
 		const hasChildren = children.length > 0
 
 		if (hasChildren) {
+			const result = nodesToElements(children, {
+				prefix: prefix + '\t'.repeat(indent),
+				spacing,
+				indent,
+			})
+
+			for (const tag of result.tags) {
+				tagsUsed.add(tag)
+			}
+
 			return [
 				`${prefix}${node.name}(${attrsToProps(node.attribs, hasChildren, spacing)}`,
-				...nodesToElements({
-					nodes: children,
-					prefix: prefix + '\t'.repeat(indent),
-					tagsUsed,
-					spacing,
-					indent,
-				}),
+				...result.code,
 				`${prefix})${suffix}`,
 			]
 		}
 
 		return `${prefix}${node.name}(${attrsToProps(node.attribs, hasChildren, spacing)})${suffix}`
 	})
+
+	return {
+		code,
+		tags: [...tagsUsed].sort(),
+	}
 }
