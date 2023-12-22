@@ -7,6 +7,10 @@ export function transform(html: string) {
 	})
 }
 
+const DEFAULT_PREFIX = ''
+const DEFAULT_INDENT = 1
+const DEFAULT_SPACING = false
+
 const quoteIfNeeded = (key: string) => /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(key) ? key : `"${key}"`
 
 export type Tag = {
@@ -56,15 +60,14 @@ export type MarkupToElementsOptions = {
 
 export function markupToElements(html: string, options?: MarkupToElementsOptions) {
 	const {
-		indent = 1,
-		spacing = false,
+		indent = DEFAULT_INDENT,
+		spacing = DEFAULT_SPACING,
 	} = options ?? {}
 
 	const nodes = markupToNodes(html)
 
 	const tagsUsed = new Set<string>()
 	const result = nodesToElements(nodes, {
-		prefix: '',
 		indent,
 		spacing,
 	})
@@ -85,13 +88,18 @@ function attrsToProps(attrs: Record<string, string>, hasChildren: boolean, spaci
 }
 
 type NodesToElementOptions = {
-	prefix: string
-	spacing: boolean
-	indent: number
+	prefix?: string
+	spacing?: boolean
+	indent?: number
 }
 
-export function nodesToElements(nodes: Array<Node>, options: NodesToElementOptions) {
-	const { prefix, spacing, indent } = options
+export function nodesToElements(nodes: Array<Node>, options?: NodesToElementOptions) {
+	const {
+		prefix = DEFAULT_PREFIX,
+		spacing = DEFAULT_SPACING,
+		indent = DEFAULT_INDENT,
+	} = options ?? {}
+
 	const tagsUsed = new Set<string>()
 
 	const code = nodes.flatMap((node): string | Array<string> => {

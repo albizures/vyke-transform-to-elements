@@ -28,7 +28,8 @@
 		"test:unit:dev": "vitest",
 		"release:bump": "standard-version -t v",
 		"release:publish": "pnpm publish --access public",
-		"release": "run-s test build release:bump release:publish"
+		"release:push-tags": "git push --follow-tags origin main",
+		"release": "run-s test build release:bump release:publish release:push-tags"
 	},
 	"dependencies": {
 		"debounce": "^2.0.0",
