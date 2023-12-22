@@ -1,7 +1,7 @@
 import { expect, it } from 'vitest'
 import { markupToElements } from './markup'
 
-it('should convert to elements', () => {
+it('should transform to elements', () => {
 	expect(true).toBe(true)
 
 	expect(markupToElements('<p>test</p> <Test/>')).toMatchObject(expect.objectContaining(
@@ -23,3 +23,6 @@ it('should convert to elements', () => {
 		},
 	))
 })
+
+it.todo('should transform from markup to nodes')
+it.todo('should transform from nodes to elements')

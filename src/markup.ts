@@ -1,5 +1,5 @@
 import parse from 'html-dom-parser'
-import type { ChildNode, Element, Text } from 'domhandler'
+import type { ChildNode } from 'domhandler'
 
 export function transform(html: string) {
 	return parse(html, {
@@ -9,33 +9,62 @@ export function transform(html: string) {
 
 const quoteIfNeeded = (key: string) => /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(key) ? key : `"${key}"`
 
-type Dom = Element | Text
+type Tag = {
+	children: Array<Node>
+	name: string
+	attribs: Record<string, string>
+	type: 'tag' | 'script'
+}
+type Text = { data: string, type: 'text' }
+type Node = Tag | Text
 
-function filterDoms(doms: Array<ChildNode>, skipEmptyText = true) {
-	return doms.filter((c) => {
-		return (c.type === 'tag')
-			|| (c.type === 'text' && (!skipEmptyText || /\S/.test(c.data)))
-			|| c.type === 'script'
-	}) as Array<Dom>
+function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
+	const nodes: Array<Node> = []
+
+	for (const node of origin) {
+		if (node.type === 'tag' || node.type === 'script') {
+			const localSkipEmptyText = skipEmptyText && node.name !== 'pre'
+
+			nodes.push({
+				...node,
+				type: node.type === 'tag' ? 'tag' : 'script',
+				children: filterDoms(node.children, localSkipEmptyText),
+			})
+		}
+		if (node.type === 'text') {
+			if (!skipEmptyText || /\S/.test(node.data)) {
+				nodes.push({
+					...node,
+					type: 'text',
+				})
+			}
+		}
+	}
+
+	return nodes
 }
 
-export type MarkupToCodeOptions = {
+export type MarkupToElementsOptions = {
 	indent?: number
 	spacing?: boolean
 	htmlTagPred?: (name: string) => boolean
 }
 
-export function markupToElements(html: string, options?: MarkupToCodeOptions) {
+export function markupToNodes(html: string) {
+	return filterDoms((parse(html, { lowerCaseTags: false, lowerCaseAttributeNames: false })))
+}
+
+export function markupToElements(html: string, options?: MarkupToElementsOptions) {
 	const {
 		indent = 1,
 		spacing = false,
 	} = options ?? {}
 
-	const nodes = parse(html, { lowerCaseTags: false, lowerCaseAttributeNames: false })
+	const nodes = markupToNodes(html)
 
 	const tagsUsed = new Set<string>()
 	const code = nodesToElements({
-		nodes: filterDoms(nodes),
+		nodes,
 		prefix: '',
 		tagsUsed,
 		indent,
@@ -58,26 +87,24 @@ function attrsToProps(attrs: Record<string, string>, hasChildren: boolean, spaci
 }
 
 type DomsToCodeArgs = {
-	nodes: ReadonlyArray<Dom>
+	nodes: ReadonlyArray<Node>
 	prefix: string
-	skipEmptyText?: boolean
 	tagsUsed: Set<string>
 	spacing: boolean
 	indent: number
 }
 
-function nodesToElements(args: DomsToCodeArgs) {
-	const { nodes, prefix, skipEmptyText = true, tagsUsed, spacing, indent } = args
+export function nodesToElements(args: DomsToCodeArgs) {
+	const { nodes, prefix, tagsUsed, spacing, indent } = args
 	return nodes.flatMap((node): string | Array<string> => {
 		const suffix = !prefix && nodes.length <= 1 ? '' : ','
 		if (node.type === 'text') {
 			return `${prefix}${JSON.stringify(node.data)}${suffix}`
 		}
+
 		tagsUsed.add(node.name)
 
-		const localSkipEmptyText = skipEmptyText && node.name !== 'pre'
-
-		const children = filterDoms(node.children, localSkipEmptyText)
+		const { children } = node
 		const hasChildren = children.length > 0
 
 		if (hasChildren) {
@@ -86,7 +113,6 @@ function nodesToElements(args: DomsToCodeArgs) {
 				...nodesToElements({
 					nodes: children,
 					prefix: prefix + '\t'.repeat(indent),
-					skipEmptyText: localSkipEmptyText,
 					tagsUsed,
 					spacing,
 					indent,

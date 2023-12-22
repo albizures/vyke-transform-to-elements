@@ -1,1 +1,1 @@
-export { markupToElements as markupToCode } from './markup'
+export { markupToElements, markupToNodes } from './markup'

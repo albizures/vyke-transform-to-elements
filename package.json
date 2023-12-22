@@ -26,8 +26,9 @@
 		"test:lint": "eslint .",
 		"test:unit": "vitest run",
 		"test:unit:dev": "vitest",
-		"prepack": "pnpm build",
-		"release": "standard-version -t v && pnpm publish --access public"
+		"release:bump": "standard-version -t v",
+		"release:publish": "pnpm publish --access public",
+		"release": "run-s test build release:bump release:publish"
 	},
 	"dependencies": {
 		"debounce": "^2.0.0",
