@@ -5,4 +5,5 @@ export {
 	type Tag,
 	type Text,
 	type Node,
+	type Attribs,
 } from './markup'
