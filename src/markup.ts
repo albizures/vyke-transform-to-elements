@@ -13,10 +13,12 @@ const DEFAULT_SPACING = false
 
 const quoteIfNeeded = (key: string) => /^[a-zA-Z_][a-zA-Z_0-9]+$/.test(key) ? key : `"${key}"`
 
+export type Attribs = Record<string, { type: 'var', name: string } | { type: 'value', value: unknown }>
+
 export type Tag = {
 	children: Array<Node>
 	name: string
-	attribs: Record<string, string>
+	attribs: Attribs
 	type: 'tag' | 'script'
 }
 export type Text = { data: string, type: 'text' }
@@ -33,6 +35,12 @@ function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
 				...node,
 				type: node.type === 'tag' ? 'tag' : 'script',
 				children: filterDoms(node.children, localSkipEmptyText),
+				attribs: Object.fromEntries(Object.entries(node.attribs).map(([key, value]) => {
+					return [key, {
+						type: 'value',
+						value,
+					}]
+				})),
 			})
 		}
 		if (node.type === 'text') {
@@ -78,12 +86,19 @@ export function markupToElements(html: string, options?: MarkupToElementsOptions
 	}
 }
 
-function attrsToProps(attrs: Record<string, string>, hasChildren: boolean, spacing = false) {
+function attrsToProps(attrs: Attribs, hasChildren: boolean, spacing = false) {
 	const space = spacing ? ' ' : ''
 	return Object.keys(attrs).length === 0
 		? ''
 		: `{${space}${Object.entries(attrs)
-			.flatMap(([k, v]) => `${quoteIfNeeded(k)}: ${JSON.stringify(v)}`)
+			.flatMap(([key, attrib]) => {
+				const name = quoteIfNeeded(key)
+				const value = attrib.type === 'var'
+					? attrib.name
+					: JSON.stringify(attrib.value)
+
+					return `${name}: ${value}`
+			})
 			.join(', ')}${space}}${hasChildren ? ',' : ''}`
 }
 

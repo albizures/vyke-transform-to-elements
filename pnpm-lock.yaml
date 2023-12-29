@@ -47,6 +47,10 @@ importers:
         version: 0.34.6
 
   website:
+    dependencies:
+      '@vyke/elements-fa-solid':
+        specifier: ^0.0.2
+        version: 0.0.2(@vyke/elements@0.0.10)
     devDependencies:
       autoprefixer:
         specifier: ^10.4.16
@@ -1532,6 +1536,18 @@ packages:
   /@vue/shared@3.3.13:
     resolution: {integrity: sha512-/zYUwiHD8j7gKx2argXEMCUXVST6q/21DFU0sTfNX0URJroCe3b1UF6vLJ3lQDfLNIiiRl2ONp7Nh5UVWS6QnA==}
     dev: true
+
+  /@vyke/elements-fa-solid@0.0.2(@vyke/elements@0.0.10):
+    resolution: {integrity: sha512-I61lbYFQbnyliuYEv+2MIUwwtCU0fo6Idn5YBCk95HkPZYBjioNrC8/2SYCNPTRyG7KgzqP0p/rZZ1SraX4P1g==}
+    peerDependencies:
+      '@vyke/elements': ^0.0.*
+    dependencies:
+      '@vyke/elements': 0.0.10
+    dev: false
+
+  /@vyke/elements@0.0.10:
+    resolution: {integrity: sha512-lrEMPX0erosaXaprZ4MZ0oj67UUQPGV2NnTLoUELrq2uhz90AGX+h1VIoVfLN+sGb89vFWE370snNscKVfnIDg==}
+    dev: false
 
   /@zkochan/retry@0.2.0:
     resolution: {integrity: sha512-WhB+2B/ZPlW2Xy/kMJBrMbqecWXcbDDgn0K0wKBAgO2OlBTz1iLJrRWduo+DGGn0Akvz1Lu4Xvls7dJojximWw==}

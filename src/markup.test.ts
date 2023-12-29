@@ -1,5 +1,5 @@
 import { expect, it } from 'vitest'
-import { markupToElements } from './markup'
+import { markupToElements, markupToNodes, nodesToElements } from './markup'
 
 it('should transform to elements', () => {
 	expect(true).toBe(true)
@@ -24,5 +24,34 @@ it('should transform to elements', () => {
 	))
 })
 
-it.todo('should transform from markup to nodes')
-it.todo('should transform from nodes to elements')
+it('should transform from markup to nodes', () => {
+	expect(markupToNodes(`<div class="container">text</div>`)).toMatchObject([
+		{
+			name: 'div',
+			type: 'tag',
+			attribs: {
+				class: { type: 'value', value: 'container' },
+			},
+			children: [{
+				type: 'text',
+				data: 'text',
+			}],
+		},
+	])
+})
+
+it('should transform from nodes to elements', () => {
+	expect(nodesToElements([
+		{
+			name: 'div',
+			type: 'tag',
+			attribs: {
+				class: { type: 'var', name: 'classNames' },
+			},
+			children: [],
+		},
+	])).toMatchObject({
+		code: ['div({class: classNames})'],
+		tags: ['div'],
+	})
+})

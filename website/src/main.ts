@@ -1,5 +1,6 @@
 import './style.css'
 import debounce from 'debounce'
+import { FaSolidAdd } from '@vyke/elements-fa-solid'
 import { markupToElements } from '../../src/markup'
 
 const input = document.getElementById('input')! as HTMLTextAreaElement
