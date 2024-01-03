@@ -15,7 +15,8 @@
 		"preview": "vite preview"
 	},
 	"dependencies": {
-		"@vyke/elements-fa-solid": "^0.0.7"
+		"@vyke/elements-fa-solid": "^0.0.7",
+		"debounce": "^2.0.0"
 	},
 	"devDependencies": {
 		"autoprefixer": "^10.4.16",

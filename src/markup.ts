@@ -56,6 +56,17 @@ function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
 	return nodes
 }
 
+/**
+ * Converts markup into nodes, useful to manipulated the code
+ * before converting it to elements
+ * @example
+ * ```ts
+ * import { markupToNodes } from '@vyke/transform-to-elements'
+ *
+ * const nodes = markupToNodes("<div><p>test</p></div>")
+ * //      ^? Node[]
+ * ```
+ */
 export function markupToNodes(html: string) {
 	return filterDoms((parse(html, { lowerCaseTags: false, lowerCaseAttributeNames: false })))
 }
@@ -66,6 +77,18 @@ export type MarkupToElementsOptions = {
 	htmlTagPred?: (name: string) => boolean
 }
 
+/**
+ * Converts a given markup to elements
+ * @example
+ * ```ts
+ * import { markupToElements } from '@vyke/transform-to-elements'
+ *
+ * const elements = markupToElements("<div><p>test</p></div>")
+ * //       ^? { code: string[], tags: string[] }
+ * // where code is each line of the output
+ * // and tags is the list of elements found
+ * ```
+ */
 export function markupToElements(html: string, options?: MarkupToElementsOptions) {
 	const {
 		indent = DEFAULT_INDENT,
@@ -102,13 +125,25 @@ function attrsToProps(attrs: Attribs, hasChildren: boolean, spacing = false) {
 			.join(', ')}${space}}${hasChildren ? ',' : ''}`
 }
 
-type NodesToElementOptions = {
+export type NodesToElementsOptions = {
 	prefix?: string
 	spacing?: boolean
 	indent?: number
 }
 
-export function nodesToElements(nodes: Array<Node>, options?: NodesToElementOptions) {
+/**
+ * Converts nodes to elements to generate elements using the output of `markupToNodes`
+ * @example
+ * ```ts
+ * import { markupToNodes } from '@vyke/transform-to-elements'
+ *
+ * const nodes = markupToNodes("<div><p>test</p></div>")
+ * //      ^? Node[]
+ *
+ * const elements = nodesToElements(nodes); // same output as markupToElements
+ * ```
+ */
+export function nodesToElements(nodes: Array<Node>, options?: NodesToElementsOptions) {
 	const {
 		prefix = DEFAULT_PREFIX,
 		spacing = DEFAULT_SPACING,

@@ -8,9 +8,6 @@ importers:
 
   .:
     dependencies:
-      debounce:
-        specifier: ^2.0.0
-        version: 2.0.0
       domhandler:
         specifier: ^5.0.3
         version: 5.0.3
@@ -24,6 +21,9 @@ importers:
       '@testing-library/jest-dom':
         specifier: ^6.1.4
         version: 6.1.5(vitest@0.34.6)
+      '@vyke/tsdocs':
+        specifier: ^0.0.3
+        version: 0.0.3(typescript@5.3.3)
       eslint:
         specifier: ^8.55.0
         version: 8.56.0
@@ -51,6 +51,9 @@ importers:
       '@vyke/elements-fa-solid':
         specifier: ^0.0.7
         version: 0.0.7(@vyke/elements@0.0.10)
+      debounce:
+        specifier: ^2.0.0
+        version: 2.0.0
     devDependencies:
       autoprefixer:
         specifier: ^10.4.16
@@ -1548,6 +1551,26 @@ packages:
   /@vyke/elements@0.0.10:
     resolution: {integrity: sha512-lrEMPX0erosaXaprZ4MZ0oj67UUQPGV2NnTLoUELrq2uhz90AGX+h1VIoVfLN+sGb89vFWE370snNscKVfnIDg==}
     dev: false
+
+  /@vyke/results@0.0.5:
+    resolution: {integrity: sha512-Ug76jOWvYofttvYhk+Y25LZItD5ImiEclrXCcDCQEVFt+nr3HA1cXGZGzf1MuYNhz72ghX0AdDykXPKW+NmCfw==}
+    dev: true
+
+  /@vyke/sola@0.0.5:
+    resolution: {integrity: sha512-7Us7C3sdagARBy2PdOn3ffEcYE31kPYLJ3q1LkZaHIrCOCRiwkC8nPnQwhV1v/WmQ2rV4tqguYPs+J0FUc9oSw==}
+    dev: true
+
+  /@vyke/tsdocs@0.0.3(typescript@5.3.3):
+    resolution: {integrity: sha512-NyAb2PPuwJmUjpUJt5MpIwIV12sFUNda5BHoxG3l8+viCfDPF/CCiN2axMrE1I4cf7HU1202E4Urnnw39J0UTQ==}
+    hasBin: true
+    peerDependencies:
+      typescript: ^5.*
+    dependencies:
+      '@vyke/results': 0.0.5
+      '@vyke/sola': 0.0.5
+      citty: 0.1.5
+      typescript: 5.3.3
+    dev: true
 
   /@zkochan/retry@0.2.0:
     resolution: {integrity: sha512-WhB+2B/ZPlW2Xy/kMJBrMbqecWXcbDDgn0K0wKBAgO2OlBTz1iLJrRWduo+DGGn0Akvz1Lu4Xvls7dJojximWw==}

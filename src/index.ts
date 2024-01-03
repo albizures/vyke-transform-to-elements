@@ -6,4 +6,6 @@ export {
 	type Text,
 	type Node,
 	type Attribs,
+	type MarkupToElementsOptions,
+	type NodesToElementsOptions,
 } from './markup'
