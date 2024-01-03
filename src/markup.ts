@@ -63,7 +63,7 @@ function filterDoms(origin: Array<ChildNode>, skipEmptyText = true) {
  * ```ts
  * import { markupToNodes } from '@vyke/transform-to-elements'
  *
- * const nodes = markupToNodes("<div><p>test</p></div>")
+ * const nodes = markupToNodes('<div><p>test</p></div>')
  * //      ^? Node[]
  * ```
  */
@@ -83,7 +83,7 @@ export type MarkupToElementsOptions = {
  * ```ts
  * import { markupToElements } from '@vyke/transform-to-elements'
  *
- * const elements = markupToElements("<div><p>test</p></div>")
+ * const elements = markupToElements('<div><p>test</p></div>')
  * //       ^? { code: string[], tags: string[] }
  * // where code is each line of the output
  * // and tags is the list of elements found
@@ -137,7 +137,7 @@ export type NodesToElementsOptions = {
  * ```ts
  * import { markupToNodes } from '@vyke/transform-to-elements'
  *
- * const nodes = markupToNodes("<div><p>test</p></div>")
+ * const nodes = markupToNodes('<div><p>test</p></div>')
  * //      ^? Node[]
  *
  * const elements = nodesToElements(nodes); // same output as markupToElements

@@ -18,13 +18,14 @@
 		"dist"
 	],
 	"scripts": {
-		"build": "unbuild",
+		"build": "run-s build:*",
+		"build:only": "unbuild",
 		"build:docs": "tsdocs",
 		"prepare": "pnpm build",
 		"test": "run-s test:unit test:types test:lint",
 		"test:types": "tsc --noEmit",
 		"test:use": "knip",
-		"test:lint": "eslint .",
+		"test:lint": "eslint . --fix",
 		"test:unit": "vitest run",
 		"test:unit:dev": "vitest",
 		"release:bump": "standard-version -t v",

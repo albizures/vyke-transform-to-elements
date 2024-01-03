@@ -20,7 +20,7 @@ before converting it to elements
 ```ts
 import { markupToNodes } from '@vyke/transform-to-elements'
 
-const nodes = markupToNodes("<div><p>test</p></div>")
+const nodes = markupToNodes('<div><p>test</p></div>')
 //      ^? Node[]
 ```
 
@@ -30,7 +30,7 @@ Converts a given markup to elements
 ```ts
 import { markupToElements } from '@vyke/transform-to-elements'
 
-const elements = markupToElements("<div><p>test</p></div>")
+const elements = markupToElements('<div><p>test</p></div>')
 //       ^? { code: string[], tags: string[] }
 // where code is each line of the output
 // and tags is the list of elements found
@@ -42,10 +42,10 @@ Converts nodes to elements to generate elements using the output of `markupToNod
 ```ts
 import { markupToNodes } from '@vyke/transform-to-elements'
 
-const nodes = markupToNodes("<div><p>test</p></div>")
+const nodes = markupToNodes('<div><p>test</p></div>')
 //      ^? Node[]
 
-const elements = nodesToElements(nodes); // same output as markupToElements
+const elements = nodesToElements(nodes) // same output as markupToElements
 ```
 
 ## Inspiration and Credits
